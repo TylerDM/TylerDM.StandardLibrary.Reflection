@@ -14,6 +14,10 @@ jobs:
         working-directory: source/TylerDM.StandardLibrary.Reflection
 
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
+
       - name: Set up Dotnet.
         uses: actions/setup-dotnet@v4
         with:
