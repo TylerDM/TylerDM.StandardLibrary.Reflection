@@ -1,5 +1,6 @@
-﻿namespace TylerDM.StandardLibrary.Reflection;
+﻿namespace TylerDM.StandardLibrary.Reflection.System;
 
+[Obsolete]
 public static class TypeFinder
 {
 	private static readonly IReadOnlyCollection<Type> _concreteTypes;
@@ -43,7 +44,7 @@ public static class TypeFinder
 		var baseType = type.BaseType;
 		if (baseType is null) return false;
 
-		return IsAssignableToGenericType(baseType, genericType);
+		return baseType.IsAssignableToGenericType(genericType);
 	}
 
 	private static bool isAssignableFromSmart(Type t1, Type t2)
@@ -51,7 +52,7 @@ public static class TypeFinder
 		while (t1.BaseType is not null)
 		{
 			if (
-				(t2.IsGenericType && t1.IsAssignableToGenericType(t2)) ||
+				t2.IsGenericType && t1.IsAssignableToGenericType(t2) ||
 				t2.IsAssignableFrom(t1)
 			)
 				return true;

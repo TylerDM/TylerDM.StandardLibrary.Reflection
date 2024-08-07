@@ -1,10 +1,24 @@
-﻿namespace TylerDM.StandardLibrary.Reflection;
+﻿namespace TylerDM.StandardLibrary.Reflection.Linq.Expressions;
 
 public static class ExpressionExt
 {
 	#region methods
+	public static PropertyInfo ToPropertyInfo<T1, T2>(this Expression<Func<T1, T2>> property)
+	{
+		if (
+			property.Body is UnaryExpression unaryExp &&
+			unaryExp.Operand is MemberExpression memberExp
+		)
+			return (PropertyInfo)memberExp.Member;
+
+		if (property.Body is MemberExpression memberExp2)
+			return (PropertyInfo)memberExp2.Member;
+
+		throw new ArgumentException($"The expression does not point to a property.");
+	}
+
 	public static TProperty GetValue<TValue, TProperty>(this TValue value, Expression<Func<TValue, TProperty>> expression) =>
-		expression.Compile().Invoke(value);
+				expression.Compile().Invoke(value);
 
 	public static string GetMemberName<TValue, TProperty>(this Expression<Func<TValue, TProperty>> expression)
 	{
@@ -30,13 +44,13 @@ public static class ExpressionExt
 
 	public static TAttribute GetAttribute<TValue, TProperty, TAttribute>(this Expression<Func<TValue, TProperty>>
 expression)
-		where TAttribute : Attribute =>
-		expression.GetAttributeOptional<TValue, TProperty, TAttribute>() ??
-		throw new Exception("Attribute not found on member.");
+			where TAttribute : Attribute =>
+			expression.GetAttributeOptional<TValue, TProperty, TAttribute>() ??
+			throw new Exception("Attribute not found on member.");
 
 	public static TAttribute? GetAttributeOptional<TValue, TProperty, TAttribute>(this Expression<Func<TValue, TProperty>>
 expression)
-		where TAttribute : Attribute
+			where TAttribute : Attribute
 	{
 		if (expression.Body is not MemberExpression memberExpression)
 			throw new InvalidOperationException($"{nameof(Expression)} must be a {nameof(MemberExpression)}.");
@@ -47,7 +61,7 @@ expression)
 
 	#region private methods
 	private static T? getAttribute<T>(this ICustomAttributeProvider provider)
-			where T : Attribute
+					where T : Attribute
 	{
 		var attributes = provider.GetCustomAttributes(typeof(T), true);
 		return attributes.Length > 0 ? attributes[0] as T : null;

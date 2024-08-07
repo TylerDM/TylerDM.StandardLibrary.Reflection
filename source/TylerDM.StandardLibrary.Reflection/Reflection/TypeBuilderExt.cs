@@ -1,4 +1,4 @@
-﻿namespace TylerDM.StandardLibrary.Reflection;
+﻿namespace TylerDM.StandardLibrary.Reflection.Reflection;
 
 public static class TypeBuilderExt
 {
@@ -12,7 +12,7 @@ public static class TypeBuilderExt
 	#region methods
 	public static PropertyBuilder CreateProperty(this TypeBuilder typeBuilder, string propertyName, Type propertyType)
 	{
-		if (string.IsNullOrWhiteSpace(propertyName)) throw new ArgumentNullOrWhitespaceException(nameof(propertyName));
+		ArgumentException.ThrowIfNullOrWhiteSpace(propertyName, nameof(propertyName));
 
 		var fieldBuilder = typeBuilder.DefineField("_" + propertyName, propertyType, FieldAttributes.Private);
 		var propertyBuilder = typeBuilder.DefineProperty(propertyName, PropertyAttributes.HasDefault, propertyType, null);

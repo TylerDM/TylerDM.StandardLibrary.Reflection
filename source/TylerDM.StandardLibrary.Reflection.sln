@@ -5,7 +5,14 @@ VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TylerDM.StandardLibrary.Reflection.Tests", "TylerDM.StandardLibrary.Reflection.Tests\TylerDM.StandardLibrary.Reflection.Tests.csproj", "{D996A483-D9C9-4AD6-B110-9024CB62D3D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TylerDM.StandardLibrary.Reflection", "TylerDM.StandardLibrary.Reflection\TylerDM.StandardLibrary.Reflection.csproj", "{387715E9-2B1C-4426-BC99-EC82086AA50B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TylerDM.StandardLibrary.Reflection", "TylerDM.StandardLibrary.Reflection\TylerDM.StandardLibrary.Reflection.csproj", "{387715E9-2B1C-4426-BC99-EC82086AA50B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{764AE94F-8878-4DEC-A24E-A746AF37758F}"
+	ProjectSection(SolutionItems) = preProject
+		directory.Build.Props = directory.Build.Props
+		..\.github\workflows\on-main-merge-publish.yaml = ..\.github\workflows\on-main-merge-publish.yaml
+		..\.github\workflows\on-pr-test.yaml = ..\.github\workflows\on-pr-test.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
