@@ -6,7 +6,7 @@ public static class Naming
 	public static void EnsureCorrectNamespacePrefix()
 	{
 		var classesWithIncorrectNamespace = (
-			from x in typeof(Startup).Assembly.GetTypes()
+			from x in typeof(Startup).Assembly.GetDeveloperTypes()
 			where x.IsAnonymous() == false
 			let y = x.Namespace ?? ""
 			where y.StartsWith("TylerDM.StandardLibrary.Reflection") == false
