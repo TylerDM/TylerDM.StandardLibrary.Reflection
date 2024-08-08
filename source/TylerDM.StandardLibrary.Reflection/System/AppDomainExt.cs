@@ -7,28 +7,28 @@ public static class AppDomainExt
 	#endregion
 
 	#region methods
-	public static IEnumerable<Type> GetImplementingTypes<T>(Func<Type, bool>? where = null) =>
-	AppDomain.CurrentDomain.GetImplementingTypes(typeof(T), where);
+	public static IEnumerable<Type> GetImplementingTypes<T>() =>
+	AppDomain.CurrentDomain.GetImplementingTypes(typeof(T));
 
-	public static IEnumerable<Type> GetImplementingTypes(Type type, Func<Type, bool>? where = null) =>
-		AppDomain.CurrentDomain.GetImplementingTypes(type, where);
+	public static IEnumerable<Type> GetImplementingTypes(Type type) =>
+		AppDomain.CurrentDomain.GetImplementingTypes(type);
 
-	public static IEnumerable<Type> GetImplementingTypes<T>(this AppDomain appDomain, Func<Type, bool>? where = null) =>
-		appDomain.GetImplementingTypes(typeof(T), where);
+	public static IEnumerable<Type> GetImplementingTypes<T>(this AppDomain appDomain) =>
+		appDomain.GetImplementingTypes(typeof(T));
 
-	public static IEnumerable<Type> GetImplementingTypes(this AppDomain appDomain, Type type, Func<Type, bool>? where = null) =>
-		appDomain.GetDeveloperTypes(where).Where(x => x.Implements(type));
-
-	/// <summary>
-	/// Returns all the types not created by the compiler.
-	/// </summary>
-	public static IEnumerable<Type> GetDeveloperTypes(Func<Type, bool>? where = null) =>
-		AppDomain.CurrentDomain.GetDeveloperTypes(where);
+	public static IEnumerable<Type> GetImplementingTypes(this AppDomain appDomain, Type type) =>
+		appDomain.GetDeveloperTypes().Where(x => x.Implements(type));
 
 	/// <summary>
 	/// Returns all the types not created by the compiler.
 	/// </summary>
-	public static IEnumerable<Type> GetDeveloperTypes(this AppDomain appDomain, Func<Type, bool>? where = null) =>
+	public static IEnumerable<Type> GetDeveloperTypes() =>
+		AppDomain.CurrentDomain.GetDeveloperTypes();
+
+	/// <summary>
+	/// Returns all the types not created by the compiler.
+	/// </summary>
+	public static IEnumerable<Type> GetDeveloperTypes(this AppDomain appDomain) =>
 		appDomain.getAssemblies().SelectMany(x => x.GetTypes());
 
 	public static bool IsMicrosoft(this Assembly assembly)
