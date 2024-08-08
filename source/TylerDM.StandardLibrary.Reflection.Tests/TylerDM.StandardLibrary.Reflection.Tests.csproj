@@ -5,7 +5,11 @@
 		<IsTestProject>true</IsTestProject>
 	</PropertyGroup>
 
-	<ItemGroup>
+	<ItemGroup Label="Packages">
+		
+	</ItemGroup>
+
+	<ItemGroup Label="Xunit">
 		<PackageReference Include="coverlet.collector" Version="6.0.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -19,7 +23,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\TylerDM.StandardLibrary.Reflection\TylerDM.StandardLibrary.Reflection.csproj" />
+		<ProjectReference Include="..\TylerDM.StandardLibrary.Reflection\TylerDM.StandardLibrary.Reflection.csproj" />
 	</ItemGroup>
 
 </Project>
