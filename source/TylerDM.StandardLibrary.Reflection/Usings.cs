@@ -6,3 +6,7 @@ global using System.Collections.Generic;
 global using System.Collections;
 global using System.Linq;
 global using System.Threading.Tasks;
+global using System.Runtime.CompilerServices;
+global using TylerDM.StandardLibrary.System.Linq;
+global using TylerDM.StandardLibrary.System.Collections.Generic;
+global using System.Collections.Concurrent;
