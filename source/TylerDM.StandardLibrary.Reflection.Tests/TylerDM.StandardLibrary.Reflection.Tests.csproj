@@ -5,10 +5,6 @@
 		<IsTestProject>true</IsTestProject>
 	</PropertyGroup>
 
-	<ItemGroup Label="Packages">
-		
-	</ItemGroup>
-
 	<ItemGroup Label="Xunit">
 		<PackageReference Include="coverlet.collector" Version="6.0.2">
 			<PrivateAssets>all</PrivateAssets>
