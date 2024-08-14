@@ -3,12 +3,12 @@
 public static class AppDomainExt
 {
 	#region fields
-	private static ConcurrentDictionary<AppDomain, Assembly[]> _assemblies = [];
+	private static ConcurrentDictionary<AppDomain, Assembly[]> _developerAssemblies = [];
 	#endregion
 
 	#region methods
 	public static IEnumerable<Type> GetImplementingTypes<T>() =>
-	AppDomain.CurrentDomain.GetImplementingTypes(typeof(T));
+		AppDomain.CurrentDomain.GetImplementingTypes(typeof(T));
 
 	public static IEnumerable<Type> GetImplementingTypes(Type type) =>
 		AppDomain.CurrentDomain.GetImplementingTypes(type);
@@ -18,6 +18,12 @@ public static class AppDomainExt
 
 	public static IEnumerable<Type> GetImplementingTypes(this AppDomain appDomain, Type type) =>
 		appDomain.GetDeveloperTypes().Where(x => x.Implements(type));
+
+	public static IEnumerable<Assembly> GetDeveloperAssemblies() =>
+		AppDomain.CurrentDomain.GetDeveloperAssemblies();
+
+	public static IEnumerable<Assembly> GetDeveloperAssemblies(this AppDomain appDomain) =>
+		_developerAssemblies.GetOrAdd(appDomain, getDeveloperAssembliesUncached);
 
 	/// <summary>
 	/// Returns all the types not created by the compiler.
@@ -29,36 +35,16 @@ public static class AppDomainExt
 	/// Returns all the types not created by the compiler.
 	/// </summary>
 	public static IEnumerable<Type> GetDeveloperTypes(this AppDomain appDomain) =>
-		appDomain.getAssemblies().SelectMany(x => x.GetTypes());
-
-	public static bool IsMicrosoft(this Assembly assembly)
-	{
-		if (string.IsNullOrWhiteSpace(assembly.FullName)) return false;
-		return
-			assembly.FullName.StartsWith("System.") ||
-			assembly.FullName.StartsWith("Microsoft.") ||
-			assembly.FullName.StartsWith("netstandard") ||
-			assembly.FullName.StartsWith("mscorlib") ||
-			assembly.FullName.StartsWith("PresentationFramework") ||
-			assembly.FullName.StartsWith("WindowsBase") ||
-			assembly.FullName.StartsWith("PresentationCore") ||
-			assembly.FullName.Contains("PublicKeyToken=b77a5c561934e089");
-	}
+		appDomain.GetDeveloperAssemblies().SelectMany(x => x.GetTypes());
 
 	public static void ClearAssemblyCache() =>
-		_assemblies = [];
+		_developerAssemblies.Clear();
 	#endregion
 
 	#region private methods
-	private static Assembly[] getAssemblies(this AppDomain appDomain) =>
-		_assemblies.GetOrAdd(appDomain, getAssembliesUncached);
-
-	private static Assembly[] getAssembliesUncached(AppDomain appDomain) =>
-		appDomain.GetAssemblies()
-			.Where(x =>
-				string.IsNullOrWhiteSpace(x.FullName) == false &&
-				x.IsMicrosoft() == false
-			)
+	private static Assembly[] getDeveloperAssembliesUncached(AppDomain appDomain) =>
+		appDomain.GetDeveloperAssemblies()
+			.Where(AssemblyExt.IsDeveloper)
 			.ToArray();
 	#endregion
 }
