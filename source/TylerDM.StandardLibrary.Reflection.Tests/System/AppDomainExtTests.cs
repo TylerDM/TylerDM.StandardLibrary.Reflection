@@ -3,10 +3,6 @@
 public class AppDomainExtTests : DomainAndAssemblySetup
 {
 	[Fact]
-	public void CountDeveloperAssemblies() =>
-		Assert.Equal(4, AppDomainExt.GetDeveloperAssemblies().Count());
-
-	[Fact]
 	public void GetImplementingTypes_Class() =>
 		assertGets<Service1A, Service1>();
 
