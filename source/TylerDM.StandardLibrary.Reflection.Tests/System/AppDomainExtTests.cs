@@ -3,6 +3,10 @@
 public class AppDomainExtTests : DomainAndAssemblySetup
 {
 	[Fact]
+	public void CheckForThrowOnFullyLoadAppDomains() =>
+		AppDomain.CurrentDomain.FullyLoad();
+
+	[Fact]
 	public void GetImplementingTypes_Class() =>
 		assertGets<Service1A, Service1>();
 

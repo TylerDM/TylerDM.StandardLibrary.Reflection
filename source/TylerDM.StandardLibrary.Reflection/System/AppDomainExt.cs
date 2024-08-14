@@ -1,12 +1,33 @@
-﻿namespace TylerDM.StandardLibrary.Reflection.System;
+﻿using System.IO;
+
+namespace TylerDM.StandardLibrary.Reflection.System;
 
 public static class AppDomainExt
 {
 	#region fields
-	private static ConcurrentDictionary<AppDomain, Assembly[]> _developerAssemblies = [];
+	private static readonly ConcurrentDictionary<AppDomain, Assembly[]> _developerAssemblies = [];
+	private static readonly ActOncePer<AppDomain> _fullyLoadAppDomains = new(appDomain =>
+	{
+		if (OperatingSystem.IsBrowser()) return;
+
+		var baseDirectory = appDomain.BaseDirectory;
+		var assemblyFiles = Directory.GetFiles(baseDirectory, "*.dll");
+
+		foreach (var assemblyFile in assemblyFiles)
+		{
+			var assemblyName = AssemblyName.GetAssemblyName(assemblyFile);
+			Assembly.Load(assemblyName);
+		}
+	});
 	#endregion
 
 	#region methods
+	public static void FullyLoad() =>
+		AppDomain.CurrentDomain.FullyLoad();
+
+	public static void FullyLoad(this AppDomain appDomain) =>
+		_fullyLoadAppDomains.Act(appDomain);
+
 	public static IEnumerable<Type> GetImplementingTypes<T>() =>
 		AppDomain.CurrentDomain.GetImplementingTypes(typeof(T));
 
@@ -42,9 +63,13 @@ public static class AppDomainExt
 	#endregion
 
 	#region private methods
-	private static Assembly[] getDeveloperAssembliesUncached(AppDomain appDomain) =>
-		appDomain.GetAssemblies()
+	private static Assembly[] getDeveloperAssembliesUncached(AppDomain appDomain)
+	{
+		_fullyLoadAppDomains.Act(appDomain);
+
+		return appDomain.GetAssemblies()
 			.Where(AssemblyExt.IsDeveloper)
 			.ToArray();
+	}
 	#endregion
 }

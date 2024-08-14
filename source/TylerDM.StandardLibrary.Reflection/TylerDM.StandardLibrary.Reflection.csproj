@@ -9,8 +9,7 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="TylerDM.OrangePeel" Version="*" />
-		<PackageReference Include="TylerDM.StandardLibrary" Version="2.2.0" />
+		<PackageReference Include="TylerDM.StandardLibrary" Version="3.0.0" />
 	</ItemGroup>
 
 </Project>
