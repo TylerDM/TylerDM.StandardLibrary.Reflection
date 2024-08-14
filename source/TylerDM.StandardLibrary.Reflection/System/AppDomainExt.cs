@@ -10,14 +10,13 @@ public static class AppDomainExt
 	{
 		if (OperatingSystem.IsBrowser()) return;
 
-		var baseDirectory = appDomain.BaseDirectory;
-		var assemblyFiles = Directory.GetFiles(baseDirectory, "*.dll");
-
-		foreach (var assemblyFile in assemblyFiles)
-		{
-			var assemblyName = AssemblyName.GetAssemblyName(assemblyFile);
-			Assembly.Load(assemblyName);
-		}
+		Directory
+			.GetFiles(appDomain.BaseDirectory, "*.dll")
+			.ForEach(fullFileName =>
+			{
+				var assemblyName = AssemblyName.GetAssemblyName(fullFileName);
+				Assembly.Load(assemblyName);
+			});
 	});
 	#endregion
 
