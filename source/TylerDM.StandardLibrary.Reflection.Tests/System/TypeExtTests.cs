@@ -2,12 +2,13 @@
 
 public class TypeExtTests
 {
-	private class TestingLevel1() { }
-	private class TestingLevel2<T>() : TestingLevel1 { }
-	private class TestingLevel3() : TestingLevel2<object> { }
-	private class List2<T> : List<T> { }
-	private class Nongeneric : List2<object> { }
-	private class OpenGeneric<T> : Nongeneric { }
+	private interface ITestingLevel1;
+	private class TestingLevel1() : ITestingLevel1;
+	private class TestingLevel2<T>() : TestingLevel1;
+	private class TestingLevel3() : TestingLevel2<object>;
+	private class List2<T> : List<T>;
+	private class Nongeneric : List2<object>;
+	private class OpenGeneric<T> : Nongeneric;
 
 	[Fact]
 	public void ImplementsBaseOfBase() =>
@@ -15,7 +16,7 @@ public class TypeExtTests
 
 	[Fact]
 	public void ImplementsInterface() =>
-		Assert.True(typeof(Array).Implements(typeof(ICloneable)));
+		Assert.True(typeof(TestingLevel1).Implements(typeof(ITestingLevel1)));
 
 	[Fact]
 	public void OpenGenericImplementsOpenGenericInterface() =>
@@ -23,7 +24,7 @@ public class TypeExtTests
 
 	[Fact]
 	public void ImplementsBaseClass() =>
-		Assert.True(typeof(MethodInfo).Implements(typeof(MethodBase)));
+		Assert.True(typeof(AppDomain).Implements(typeof(MarshalByRefObject)));
 
 	[Fact]
 	public void NongenericImplementsClosedGeneric() =>

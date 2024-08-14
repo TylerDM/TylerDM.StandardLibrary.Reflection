@@ -58,13 +58,13 @@ public static class TypeExt
 
 	#region private methods
 	private static bool inheritsType(this Type implementationType, Type baseType) =>
-		implementationType.SelectFollow(x => x.BaseType)
-			.Skip(1)//Don't match the class itself
+		implementationType
+			.SelectFollow(x => x.BaseType, false)
 			.Any(x => x == baseType);
 
 	private static bool inheritsOpenGenericType(this Type implementationType, Type baseType) =>
-		implementationType.SelectFollow(x => x.BaseType)
-			.Skip(1)//Don't match the class itself
+		implementationType
+			.SelectFollow(x => x.BaseType, false)
 			.Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == baseType);
 
 	private static bool implementsInterface(this Type implementationType, Type interfaceType) =>

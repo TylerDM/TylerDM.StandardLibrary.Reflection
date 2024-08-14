@@ -13,18 +13,18 @@ public abstract class DomainAndAssemblySetup
 
 	protected abstract IEnumerable<Type> getImplementingTypes(Type interfaceType);
 
-	protected Type[] getImplementers(Type type) =>
+	protected Type[] getAllImplementations(Type type) =>
 		getImplementingTypes(type).ToArray();
 
-	protected void assertGets<TExpected, TInterfaceType>() =>
-		assertGets<TExpected>(typeof(TInterfaceType));
+	protected void assertSingleImplementationMatches<TExpected, TInterfaceType>() =>
+		assertSingleImplementationMatches<TExpected>(typeof(TInterfaceType));
 
-	protected void assertGets<TExpected>(Type interfaceType) =>
-		assertGets(typeof(TExpected), interfaceType);
+	protected void assertSingleImplementationMatches<TExpected>(Type interfaceType) =>
+		assertSingleImplementationMatches(typeof(TExpected), interfaceType);
 
-	protected void assertGets(Type expectedType, Type interfaceType) =>
-		Assert.Equal(expectedType, getImplementation(interfaceType));
+	protected void assertSingleImplementationMatches(Type expectedType, Type interfaceType) =>
+		Assert.Equal(expectedType, getSingleImplementation(interfaceType));
 
-	protected Type getImplementation(Type type) =>
+	protected Type getSingleImplementation(Type type) =>
 		getImplementingTypes(type).Single();
 }

@@ -2,15 +2,14 @@
 
   <PropertyGroup>
 		<IsPackable>true</IsPackable>
-		<Version>1.3.0</Version>
+		<Version>1.4.0</Version>
 		<RepositoryType>Git</RepositoryType>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="TylerDM.OrangePeel" Version="*" />
-		<PackageReference Include="TylerDM.StandardLibrary" Version="2.2.0" />
+		<PackageReference Include="TylerDM.StandardLibrary" Version="3.0.0" />
 	</ItemGroup>
 
 </Project>
