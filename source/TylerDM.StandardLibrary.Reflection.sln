@@ -9,8 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TylerDM.StandardLibrary.Ref
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{764AE94F-8878-4DEC-A24E-A746AF37758F}"
 	ProjectSection(SolutionItems) = preProject
-		directory.Build.Props = directory.Build.Props
 		..\.github\workflows\on-main-merge-publish.yaml = ..\.github\workflows\on-main-merge-publish.yaml
+		Directory.Build.props = Directory.Build.props
 		..\.github\workflows\on-pr-test.yaml = ..\.github\workflows\on-pr-test.yaml
 	EndProjectSection
 EndProject
