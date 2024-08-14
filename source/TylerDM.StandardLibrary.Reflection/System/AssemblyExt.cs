@@ -62,7 +62,7 @@ public static class AssemblyExt
 		_developerTypesByAssembly.GetOrAdd(
 			assembly,
 			assembly => assembly.GetTypes()
-				.Where(TypeExt.IsDeveloperType)
+				.Where(TypeExt.IsDeveloper)
 				.ToArray()
 		);
 	#endregion
