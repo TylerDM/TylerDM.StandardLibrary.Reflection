@@ -1,36 +1,28 @@
 ﻿namespace TylerDM.StandardLibrary.Reflection.System;
 
-public static class AppDomainExtTests
+public class AppDomainExtTests : DomainAndAssemblySetup
 {
 	[Fact]
-	public static void GetImplementingTypes_Class()
+	public void GetImplementingTypes_Class() =>
+		assertGets<Service1A, Service1>();
+
+	[Fact]
+	public void GetImplementingTypes_GenericClass() =>
+		assertGets<GenericImplementation>(typeof(GenericClass<>));
+
+	[Fact]
+	public void GetImplementingTypes_Interface()
 	{
-		var implementer = AppDomainExt.GetImplementingTypes<TestingClass>().Single();
-		if (implementer != typeof(TestingClassImplementation))
-			throw new Exception("Incorrect class returned.");
+		var implementers = getImplementers(typeof(IInterface1));
+		Assert.Equal(2, implementers.Length);
+		Assert.Contains(typeof(Service1), implementers);
+		Assert.Contains(typeof(Service1A), implementers);
 	}
 
 	[Fact]
-	public static void GetImplementingTypes_GenericClass()
-	{
-		var implementer = AppDomainExt.GetImplementingTypes(typeof(TestingGenericClass<>)).Single();
-		if (implementer != typeof(TestingGenericClassImplementation))
-			throw new Exception("Incorrect class returned.");
-	}
+	public void GetImplementingTypes_GenericInterface() =>
+		assertGets<GenericImplementation>(typeof(IGenericInterface<>));
 
-	[Fact]
-	public static void GetImplementingTypes_Interface()
-	{
-		var implementer = AppDomainExt.GetImplementingTypes<ITestingInterface>().Single();
-		if (implementer != typeof(TestingInterfaceImplementation))
-			throw new Exception("Incorrect class returned.");
-	}
-
-	[Fact]
-	public static void GetImplementingTypes_GenericInterface()
-	{
-		var implementer = AppDomainExt.GetImplementingTypes(typeof(ITestingGenericInterface<>)).Single();
-		if (implementer != typeof(TestingGenericInterfaceImplementation))
-			throw new Exception("Incorrect class returned.");
-	}
+	protected override IEnumerable<Type> getImplementingTypes(Type interfaceType) =>
+		AppDomainExt.GetImplementingTypes(interfaceType);
 }

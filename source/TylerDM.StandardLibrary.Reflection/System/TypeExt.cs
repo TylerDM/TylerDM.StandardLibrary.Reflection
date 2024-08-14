@@ -13,11 +13,19 @@ public static class TypeExt
 	public static bool Implements(this Type implementationType, Type type) =>
 		type switch
 		{
-			{ IsGenericType: false, IsInterface: true } => implementsInterface(implementationType, type),
-			{ IsGenericType: true, IsInterface: true } => implementsGenericInterface(implementationType, type),
-			{ IsGenericType: false, IsInterface: false } => inheritsType(implementationType, type),
-			{ IsGenericType: true, IsInterface: false } => inheritsGenericType(implementationType, type)
+			{ ContainsGenericParameters: false, IsInterface: true } => implementsInterface(implementationType, type),
+			{ ContainsGenericParameters: true, IsInterface: true } => implementsOpenGenericInterface(implementationType, type),
+			{ ContainsGenericParameters: false, IsInterface: false } => inheritsType(implementationType, type),
+			{ ContainsGenericParameters: true, IsInterface: false } => inheritsOpenGenericType(implementationType, type)
 		};
+
+	public static bool IsDeveloper(this Type type) =>
+		type.IsAnonymous() == false &&
+		type.IsCompilerGenerated() == false &&
+		type.Namespace is not null;
+
+	public static bool IsMicrosoft(this Type type) =>
+		type.Namespace?.StartsWith("Microsoft.") ?? false;
 
 	public static bool IsAnonymous(this Type type) =>
 		type.HasAttribute(typeof(CompilerGeneratedAttribute)) &&
@@ -54,7 +62,7 @@ public static class TypeExt
 			.Skip(1)//Don't match the class itself
 			.Any(x => x == baseType);
 
-	private static bool inheritsGenericType(this Type implementationType, Type baseType) =>
+	private static bool inheritsOpenGenericType(this Type implementationType, Type baseType) =>
 		implementationType.SelectFollow(x => x.BaseType)
 			.Skip(1)//Don't match the class itself
 			.Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == baseType);
@@ -62,7 +70,7 @@ public static class TypeExt
 	private static bool implementsInterface(this Type implementationType, Type interfaceType) =>
 		implementationType.GetInterfaces().Any(x => x == interfaceType);
 
-	private static bool implementsGenericInterface(this Type implementationType, Type genericInterfaceType) =>
+	private static bool implementsOpenGenericInterface(this Type implementationType, Type genericInterfaceType) =>
 		implementationType.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == genericInterfaceType);
 	#endregion
 }
