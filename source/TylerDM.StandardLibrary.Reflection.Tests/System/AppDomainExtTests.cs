@@ -1,36 +1,44 @@
-﻿namespace TylerDM.StandardLibrary.Reflection.System;
+﻿using static TylerDM.StandardLibrary.Reflection.System.AppDomainExt;
 
-public static class AppDomainExtTests
+namespace TylerDM.StandardLibrary.Reflection.System;
+
+public class AppDomainExtTests : DomainAndAssemblySetup
 {
 	[Fact]
-	public static void GetImplementingTypes_Class()
+	public static void Inspect()
 	{
-		var implementer = AppDomainExt.GetImplementingTypes<TestingClass>().Single();
-		if (implementer != typeof(TestingClassImplementation))
-			throw new Exception("Incorrect class returned.");
+		var developerAssemblies = GetDeveloperAssemblies().ToArray();
+		var developerTypes = GetDeveloperTypes().ToArray();
 	}
 
 	[Fact]
-	public static void GetImplementingTypes_GenericClass()
-	{
-		var implementer = AppDomainExt.GetImplementingTypes(typeof(TestingGenericClass<>)).Single();
-		if (implementer != typeof(TestingGenericClassImplementation))
-			throw new Exception("Incorrect class returned.");
-	}
+	public static void GetImplementingTypes_Class() =>
+		assertGets<Service1A, Service1>();
 
 	[Fact]
-	public static void GetImplementingTypes_Interface()
-	{
-		var implementer = AppDomainExt.GetImplementingTypes<ITestingInterface>().Single();
-		if (implementer != typeof(TestingInterfaceImplementation))
-			throw new Exception("Incorrect class returned.");
-	}
+	public static void GetImplementingTypes_GenericClass() =>
+		assertGets<GenericImplementation>(typeof(GenericClass<>));
 
 	[Fact]
-	public static void GetImplementingTypes_GenericInterface()
-	{
-		var implementer = AppDomainExt.GetImplementingTypes(typeof(ITestingGenericInterface<>)).Single();
-		if (implementer != typeof(TestingGenericInterfaceImplementation))
-			throw new Exception("Incorrect class returned.");
-	}
+	public static void GetImplementingTypes_Interface() =>
+		assertGets<Service1>(typeof(IInterface1));
+
+	[Fact]
+	public static void GetImplementingTypes_GenericInterface() =>
+		assertGets<GenericImplementation>(typeof(IGenericInterface<>));
+
+	private static void assertGets<TExpected, TInterfaceType>() =>
+		assertGets<TExpected>(typeof(TInterfaceType));
+
+	private static void assertGets<TExpected>(Type interfaceType) =>
+		assertGets(typeof(TExpected), interfaceType);
+
+	private static void assertGets(Type expectedType, Type interfaceType) =>
+		Assert.Equal(expectedType, getImplementation(interfaceType));
+
+	private static Type getImplementation<T>() =>
+		GetImplementingTypes<T>().Single();
+
+	private static Type getImplementation(Type type) =>
+		GetImplementingTypes(type).Single();
 }
