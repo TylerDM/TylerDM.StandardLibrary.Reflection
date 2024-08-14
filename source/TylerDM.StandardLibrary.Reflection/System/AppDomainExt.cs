@@ -43,7 +43,7 @@ public static class AppDomainExt
 
 	#region private methods
 	private static Assembly[] getDeveloperAssembliesUncached(AppDomain appDomain) =>
-		appDomain.GetDeveloperAssemblies()
+		appDomain.GetAssemblies()
 			.Where(AssemblyExt.IsDeveloper)
 			.ToArray();
 	#endregion

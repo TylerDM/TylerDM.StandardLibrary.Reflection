@@ -1,44 +1,32 @@
-﻿using static TylerDM.StandardLibrary.Reflection.System.AppDomainExt;
-
-namespace TylerDM.StandardLibrary.Reflection.System;
+﻿namespace TylerDM.StandardLibrary.Reflection.System;
 
 public class AppDomainExtTests : DomainAndAssemblySetup
 {
 	[Fact]
-	public static void Inspect()
-	{
-		var developerAssemblies = GetDeveloperAssemblies().ToArray();
-		var developerTypes = GetDeveloperTypes().ToArray();
-	}
+	public void CountDeveloperAssemblies() =>
+		Assert.Equal(4, AppDomainExt.GetDeveloperAssemblies().Count());
 
 	[Fact]
-	public static void GetImplementingTypes_Class() =>
+	public void GetImplementingTypes_Class() =>
 		assertGets<Service1A, Service1>();
 
 	[Fact]
-	public static void GetImplementingTypes_GenericClass() =>
+	public void GetImplementingTypes_GenericClass() =>
 		assertGets<GenericImplementation>(typeof(GenericClass<>));
 
 	[Fact]
-	public static void GetImplementingTypes_Interface() =>
-		assertGets<Service1>(typeof(IInterface1));
+	public void GetImplementingTypes_Interface()
+	{
+		var implementers = getImplementers(typeof(IInterface1));
+		Assert.Equal(2, implementers.Length);
+		Assert.Contains(typeof(Service1), implementers);
+		Assert.Contains(typeof(Service1A), implementers);
+	}
 
 	[Fact]
-	public static void GetImplementingTypes_GenericInterface() =>
+	public void GetImplementingTypes_GenericInterface() =>
 		assertGets<GenericImplementation>(typeof(IGenericInterface<>));
 
-	private static void assertGets<TExpected, TInterfaceType>() =>
-		assertGets<TExpected>(typeof(TInterfaceType));
-
-	private static void assertGets<TExpected>(Type interfaceType) =>
-		assertGets(typeof(TExpected), interfaceType);
-
-	private static void assertGets(Type expectedType, Type interfaceType) =>
-		Assert.Equal(expectedType, getImplementation(interfaceType));
-
-	private static Type getImplementation<T>() =>
-		GetImplementingTypes<T>().Single();
-
-	private static Type getImplementation(Type type) =>
-		GetImplementingTypes(type).Single();
+	protected override IEnumerable<Type> getImplementingTypes(Type interfaceType) =>
+		AppDomainExt.GetImplementingTypes(interfaceType);
 }

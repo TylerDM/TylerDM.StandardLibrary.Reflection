@@ -1,6 +1,4 @@
-﻿using static TylerDM.StandardLibrary.Reflection.System.AssemblyExt;
-
-namespace TylerDM.StandardLibrary.Reflection.System;
+﻿namespace TylerDM.StandardLibrary.Reflection.System;
 
 public class AssemblyExtTests : DomainAndAssemblySetup
 {
@@ -13,25 +11,18 @@ public class AssemblyExtTests : DomainAndAssemblySetup
 		assertGets<GenericImplementation>(typeof(GenericClass<>));
 
 	[Fact]
-	public void GetImplementingTypes_Interface() =>
-		assertGets<Service1>(typeof(IInterface1));
+	public void GetImplementingTypes_Interface()
+	{
+		var implementers = getImplementers(typeof(IInterface1));
+		Assert.Equal(2, implementers.Length);
+		Assert.Contains(typeof(Service1), implementers);
+		Assert.Contains(typeof(Service1A), implementers);
+	}
 
 	[Fact]
 	public void GetImplementingTypes_GenericInterface() =>
 		assertGets<GenericImplementation>(typeof(IGenericInterface<>));
 
-	private void assertGets<TExpected, TInterfaceType>() =>
-		assertGets<TExpected>(typeof(TInterfaceType));
-
-	private void assertGets<TExpected>(Type interfaceType) =>
-		assertGets(typeof(TExpected), interfaceType);
-
-	private void assertGets(Type expectedType, Type interfaceType) =>
-		Assert.Equal(expectedType, getImplementation(interfaceType));
-
-	private Type getImplementation<T>() =>
-		GetImplementingTypes<T>().Single();
-
-	private Type getImplementation(Type type) =>
-		GetImplementingTypes(type).Single();
+	protected override IEnumerable<Type> getImplementingTypes(Type interfaceType) =>
+		AssemblyExt.GetImplementingTypes(interfaceType);
 }
