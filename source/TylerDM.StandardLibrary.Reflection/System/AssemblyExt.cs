@@ -3,10 +3,40 @@
 public static class AssemblyExt
 {
 	#region fields
-	private static readonly ConcurrentDictionary<Assembly, Type[]> _cache = [];
+	private static readonly ConcurrentDictionary<Assembly, Type[]> _developerTypesByAssembly = [];
 	#endregion
 
 	#region methods
+	public static bool IsDeveloper(this Assembly assembly) =>
+		assembly.FullName is not null &&
+		assembly.IsMicrosoft() == false &&
+		assembly.IsTest() == false;
+
+	public static bool IsTest(this Assembly assembly)
+	{
+		var fullName = assembly.FullName;
+		if (string.IsNullOrWhiteSpace(fullName)) return false;
+		return
+			fullName.startsWith("testhost") ||
+			fullName.startsWith("xunit.") ||
+			fullName.startsWith("nunit.");
+	}
+
+	public static bool IsMicrosoft(this Assembly assembly)
+	{
+		var fullName = assembly.FullName;
+		if (string.IsNullOrWhiteSpace(fullName)) return false;
+		return
+			fullName.StartsWith("System.") ||
+			fullName.StartsWith("Microsoft.") ||
+			fullName.StartsWith("netstandard") ||
+			fullName.StartsWith("mscorlib") ||
+			fullName.StartsWith("PresentationFramework") ||
+			fullName.StartsWith("WindowsBase") ||
+			fullName.StartsWith("PresentationCore") ||
+			fullName.Contains("PublicKeyToken=b77a5c561934e089");
+	}
+
 	public static IEnumerable<Type> GetImplementingTypes<T>() =>
 		Assembly.GetCallingAssembly().GetImplementingTypes(typeof(T));
 
@@ -29,11 +59,16 @@ public static class AssemblyExt
 	/// Returns all the types not created by the compiler.
 	/// </summary>
 	public static IEnumerable<Type> GetDeveloperTypes(this Assembly assembly) =>
-		_cache.GetOrAdd(
+		_developerTypesByAssembly.GetOrAdd(
 			assembly,
 			assembly => assembly.GetTypes()
-				.Where(x => x.IsAnonymous() is false && x.IsCompilerGenerated() is false)
+				.Where(TypeExt.IsDeveloperType)
 				.ToArray()
 		);
+	#endregion
+
+	#region private methods
+	private static bool startsWith(this string str, string start) =>
+		str.StartsWith(start, StringComparison.InvariantCultureIgnoreCase);
 	#endregion
 }
