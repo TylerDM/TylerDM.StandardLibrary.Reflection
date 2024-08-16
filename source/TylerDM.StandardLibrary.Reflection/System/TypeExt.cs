@@ -7,6 +7,13 @@ public static class TypeExt
 	#endregion
 
 	#region methods
+	public static MemberInfo GetMember(this Type type, Func<MemberInfo, bool> predicate) =>
+		type.GetMembers().Single(predicate);
+
+	public static TMemberInfo Get<TMemberInfo>(this Type type, Func<TMemberInfo, bool> predicate)
+		where TMemberInfo : MemberInfo =>
+		type.GetMembers().OfType<TMemberInfo>().Single(predicate);
+
 	public static bool Implements<TInterface>(this Type type) =>
 		Implements(type, typeof(TInterface));
 
@@ -28,26 +35,18 @@ public static class TypeExt
 		type.Namespace?.StartsWith("Microsoft.") ?? false;
 
 	public static bool IsAnonymous(this Type type) =>
-		type.HasAttribute(typeof(CompilerGeneratedAttribute)) &&
+		type.IsCompilerGenerated() &&
 		type.FullName!.Contains("AnonymousType");
 
 	public static bool IsCompilerGenerated(this Type type) =>
 		type.HasAttribute(typeof(CompilerGeneratedAttribute));
 
+	public static bool HasAttribute<TAttribute>(this Type type, bool inherit = false)
+		where TAttribute : Attribute =>
+		type.HasAttribute(typeof(TAttribute), inherit);
+
 	public static bool HasAttribute(this Type type, Type attributeType, bool inherit = false) =>
 		type.GetCustomAttributes(attributeType, inherit).Any();
-
-	public static MethodInfo GetMethodRequired(this Type type, string name) =>
-		type.GetMethod(name) ?? throw new Exception(_methodNotFoundMessage);
-
-	public static MethodInfo GetMethodRequired(this Type type, string name, BindingFlags bindingFlags) =>
-		type.GetMethod(name, bindingFlags) ?? throw new Exception(_methodNotFoundMessage);
-
-	public static MethodInfo GetMethodRequired(this Type type, string name, params Type[] types) =>
-		type.GetMethod(name, types) ?? throw new Exception(_methodNotFoundMessage);
-
-	public static MethodInfo GetMethodRequired(this Type type, string name, BindingFlags bindingFlags, params Type[] types) =>
-		type.GetMethod(name, bindingFlags, types) ?? throw new Exception(_methodNotFoundMessage);
 
 	public static bool GetIsNullableEnum(this Type t)
 	{

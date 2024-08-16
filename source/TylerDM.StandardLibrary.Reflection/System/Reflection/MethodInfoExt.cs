@@ -1,4 +1,4 @@
-﻿namespace TylerDM.StandardLibrary.Reflection.Reflection;
+﻿namespace TylerDM.StandardLibrary.Reflection.System.Reflection;
 
 public static class MethodInfoExt
 {
