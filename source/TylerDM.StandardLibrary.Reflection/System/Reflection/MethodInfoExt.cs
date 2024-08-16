@@ -6,6 +6,13 @@ public static class MethodInfoExt
 	{
 		var task = method.Invoke(instance, args);
 		await (Task)task!;
-		return task.GetType()!.GetProperty("Result")!.GetValue(task, null);
+		return task.GetType()!.GetProperty(nameof(Task<object>.Result))!.GetValue(task, null);
+	}
+
+	public static async Task<TValue?> GetValueAsync<TValue>(this MethodInfo method, object instance, params object[] args)
+	{
+		var task = method.Invoke(instance, args);
+		await (Task)task!;
+		return (TValue?)task.GetType()!.GetProperty(nameof(Task<object>.Result))!.GetValue(task, null);
 	}
 }
