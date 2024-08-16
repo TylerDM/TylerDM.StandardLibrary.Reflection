@@ -2,21 +2,24 @@
 
 public class TypeExtTests
 {
-	private interface ITestingLevel1;
-	private class TestingLevel1() : ITestingLevel1;
-	private class TestingLevel2<T>() : TestingLevel1;
-	private class TestingLevel3() : TestingLevel2<object>;
-	private class List2<T> : List<T>;
-	private class Nongeneric : List2<object>;
-	private class OpenGeneric<T> : Nongeneric;
+	interface InterfaceGeneric<T>;
+	interface Interface;
+	abstract class BaseBase;
+	abstract class Base : BaseBase;
+	class Implementation : Base, Interface, InterfaceGeneric<object>;
+	class ImplementationGeneric<T> : InterfaceGeneric<object>, Interface;
 
 	[Fact]
 	public void ImplementsBaseOfBase() =>
-		Assert.True(typeof(TestingLevel3).Implements<TestingLevel1>());
+		Assert.True(typeof(Implementation).Implements<BaseBase>());
 
 	[Fact]
 	public void ImplementsInterface() =>
-		Assert.True(typeof(TestingLevel1).Implements(typeof(ITestingLevel1)));
+		Assert.True(typeof(Implementation).Implements(typeof(Interface)));
+
+	[Fact]
+	public void NongenericImplementsOpenGenericInterface() =>
+		Assert.True(typeof(Implementation).Implements(typeof(InterfaceGeneric<>)));
 
 	[Fact]
 	public void OpenGenericImplementsOpenGenericInterface() =>
@@ -28,15 +31,15 @@ public class TypeExtTests
 
 	[Fact]
 	public void NongenericImplementsClosedGeneric() =>
-		Assert.True(typeof(Nongeneric).Implements(typeof(List2<object>)));
+		Assert.True(typeof(Implementation).Implements(typeof(InterfaceGeneric<object>)));
 
 	[Fact]
 	public void OpenGenericImplementsOpenGeneric() =>
-		Assert.True(typeof(List2<>).Implements(typeof(List<>)));
+		Assert.True(typeof(ImplementationGeneric<>).Implements(typeof(InterfaceGeneric<>)));
 
 	[Fact]
 	public void OpenGenericImplementsNongeneric() =>
-		Assert.True(typeof(OpenGeneric<>).Implements(typeof(Nongeneric)));
+		Assert.True(typeof(ImplementationGeneric<>).Implements(typeof(Interface)));
 
 	[Fact]
 	public void ObjectDoesNotImplementEnum() =>
