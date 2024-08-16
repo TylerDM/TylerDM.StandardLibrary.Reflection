@@ -3,12 +3,28 @@
 public static class TypeExt
 {
 	#region methods
+	public static MemberInfo[] GetAllMembers(this Type type) =>
+		type.GetMembers(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+
 	public static MemberInfo GetMember(this Type type, Func<MemberInfo, bool> predicate) =>
 		type.GetMembers().Single(predicate);
 
 	public static TMemberInfo Get<TMemberInfo>(this Type type, Func<TMemberInfo, bool> predicate)
 		where TMemberInfo : MemberInfo =>
-		type.GetMembers().OfType<TMemberInfo>().Single(predicate);
+		type.GetAllMembers()
+			.OfType<TMemberInfo>()
+			.Single(predicate);
+
+	public static TMemberInfo Get<TMemberInfo>(this Type type, string name, Func<TMemberInfo, bool>? predicate = null)
+		where TMemberInfo : MemberInfo
+	{
+		var query = type.GetAllMembers()
+				.OfType<TMemberInfo>()
+				.Where(x => x.Name == name);
+		if (predicate is not null)
+			query = query.Where(predicate);
+		return query.Single();
+	}
 
 	public static bool Implements<TInterface>(this Type type) =>
 		Implements(type, typeof(TInterface));

@@ -2,12 +2,15 @@
 
 public static class MemberInfoExt
 {
-	public static IEnumerable<MemberInfo> GetDeveloperMembers()
+	public static IEnumerable<MemberInfo> GetDeveloperMembers() =>
+		GetDeveloperMembers(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+
+	public static IEnumerable<MemberInfo> GetDeveloperMembers(BindingFlags bindingFlags)
 	{
 		foreach (var type in AppDomainExt.GetDeveloperTypes())
 		{
 			yield return type;
-			foreach (var member in type.GetMembers())
+			foreach (var member in type.GetMembers(bindingFlags))
 				yield return member;
 		}
 	}
