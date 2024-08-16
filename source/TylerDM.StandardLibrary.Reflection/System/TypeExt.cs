@@ -2,10 +2,6 @@
 
 public static class TypeExt
 {
-	#region const
-	private const string _methodNotFoundMessage = "No method matches the supplied constraints.";
-	#endregion
-
 	#region methods
 	public static MemberInfo GetMember(this Type type, Func<MemberInfo, bool> predicate) =>
 		type.GetMembers().Single(predicate);
