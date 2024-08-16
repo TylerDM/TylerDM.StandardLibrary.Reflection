@@ -6,3 +6,4 @@ global using TylerDM.StandardLibrary.Reflection.System;
 global using Xunit;
 global using TylerDM.StandardLibrary.Reflection;
 global using TylerDM.StandardLibrary.Reflection.System.Reflection;
+global using System.Threading.Tasks;
