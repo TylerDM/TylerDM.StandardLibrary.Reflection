@@ -2,7 +2,7 @@
 
 public static class MethodInfoExt
 {
-	public static async Task<object?> ObjectiveInvokeAsync(this MethodInfo method, object instance, params object[] args)
+	public static async Task<object?> GetValueAsync(this MethodInfo method, object instance, params object[] args)
 	{
 		var task = method.Invoke(instance, args);
 		await (Task)task!;
