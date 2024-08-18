@@ -2,6 +2,9 @@
 
 public static class MethodInfoExt
 {
+	public static void StaticInvoke(this MethodInfo method, params object?[]? parameters) =>
+		method.Invoke(null, parameters);
+
 	public static TValue Invoke<TValue>(this MethodInfo method, object instance, params object?[]? parameters) =>
 		(TValue)method.Invoke(instance, parameters)!;
 

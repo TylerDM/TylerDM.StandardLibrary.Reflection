@@ -2,8 +2,26 @@
 
 public static class MemberInfoExt
 {
+	public static bool IsStatic(this MemberInfo memberInfo) =>
+		memberInfo switch
+		{
+			PropertyInfo propertyInfo => propertyInfo.IsStatic(),
+			MethodInfo methodInfo => methodInfo.IsStatic,
+			FieldInfo fieldInfo => fieldInfo.IsStatic,
+
+			_ => throw new ArgumentOutOfRangeException(nameof(memberInfo))
+		};
+
+	public static bool IsInstance(this MemberInfo memberInfo) =>
+		memberInfo.IsStatic() == false;
+
 	public static IEnumerable<MemberInfo> GetDeveloperMembers() =>
-		GetDeveloperMembers(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+		GetDeveloperMembers(
+			BindingFlags.Instance |
+			BindingFlags.Static |
+			BindingFlags.Public |
+			BindingFlags.NonPublic
+		);
 
 	public static IEnumerable<MemberInfo> GetDeveloperMembers(BindingFlags bindingFlags)
 	{

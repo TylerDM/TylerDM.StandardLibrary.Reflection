@@ -15,6 +15,24 @@ public static class TypeExt
 			.OfType<TMemberInfo>()
 			.Single(predicate);
 
+	public static TMemberInfo GetStatic<TMemberInfo>(this Type type, Func<TMemberInfo, bool> predicate)
+		where TMemberInfo : MemberInfo =>
+		type.GetAllMembers()
+			.OfType<TMemberInfo>()
+			.Where(x => x.IsStatic())
+			.Single(predicate);
+
+	public static TMemberInfo GetStatic<TMemberInfo>(this Type type, string name, Func<TMemberInfo, bool>? predicate = null)
+		where TMemberInfo : MemberInfo
+	{
+		var query = type.GetAllMembers()
+			.OfType<TMemberInfo>()
+			.Where(x => x.Name == name && x.IsStatic());
+		if (predicate is not null)
+			query = query.Where(predicate);
+		return query.Single();
+	}
+
 	public static TMemberInfo Get<TMemberInfo>(this Type type, string name, Func<TMemberInfo, bool>? predicate = null)
 		where TMemberInfo : MemberInfo
 	{
