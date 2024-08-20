@@ -2,6 +2,9 @@
 
 public static class MemberInfoExt
 {
+	public static bool HasAttribute(this MemberInfo memberInfo, Type attributeType, bool inherit = false) =>
+		memberInfo.GetCustomAttribute(attributeType, inherit) is not null;
+
 	public static bool IsStatic(this MemberInfo memberInfo) =>
 		memberInfo switch
 		{

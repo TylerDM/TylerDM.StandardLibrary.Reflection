@@ -76,7 +76,7 @@ public static class TypeExt
 		type.HasAttribute(typeof(TAttribute), inherit);
 
 	public static bool HasAttribute(this Type type, Type attributeType, bool inherit = false) =>
-		type.GetCustomAttributes(attributeType, inherit).Any();
+		type.GetCustomAttribute(attributeType, inherit) is not null;
 
 	public static bool GetIsNullableEnum(this Type t)
 	{
