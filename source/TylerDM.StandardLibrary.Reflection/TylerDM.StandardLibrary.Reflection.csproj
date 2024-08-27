@@ -6,6 +6,7 @@
 		<RepositoryType>Git</RepositoryType>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
 	<ItemGroup>
