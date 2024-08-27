@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace TylerDM.StandardLibrary.Reflection.System;
+﻿namespace TylerDM.StandardLibrary.Reflection.System;
 
 public static class AppDomainExt
 {
