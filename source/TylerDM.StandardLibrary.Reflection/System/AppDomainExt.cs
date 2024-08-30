@@ -12,8 +12,13 @@ public static class AppDomainExt
 			.GetFiles(appDomain.BaseDirectory, "*.dll")
 			.ForEach(fullFileName =>
 			{
-				var assemblyName = AssemblyName.GetAssemblyName(fullFileName);
-				Assembly.Load(assemblyName);
+				try
+				{
+					var assemblyName = AssemblyName.GetAssemblyName(fullFileName);
+					Assembly.Load(assemblyName);
+				}
+				//Swallow exceptions caused by nonCLR libraries.
+				catch (BadImageFormatException) { }
 			});
 	});
 	#endregion
